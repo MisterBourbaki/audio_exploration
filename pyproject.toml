@@ -1,0 +1,46 @@
+[project]
+name = "audio-exploration"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "Baptiste Morisse", email = "bmorisse.pro@proton.me" }
+]
+dependencies = [
+    "torch>=2.3.0",
+    "lightning>=2.2.5",
+    "torchaudio>=2.3.0",
+    "pykeops>=2.2.3",
+    "einops>=0.8.0",
+    "rich>=13.7.1",
+    "jsonargparse[signatures,omegaconf]>=4.29.0",
+    "plotly>=5.22.0",
+    "vector-quantize-pytorch>=1.14.24",
+    "encyclopedia-vae>=0.2.0",
+    "torchinfo>=1.8.0",
+    "marimo>=0.6.13",
+    "python-dotenv>=1.0.1",
+    "librosa>=0.10.2.post1",
+    "torchmetrics>=1.4.0.post0",
+    "pydantic>=2.7.2",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[project.scripts]
+"audio-exploration" = "audio_exploration:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "ruff>=0.4.6",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/audio_exploration"]
