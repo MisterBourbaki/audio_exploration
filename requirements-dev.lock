@@ -222,6 +222,7 @@ pydantic-core==2.18.3
 pygments==2.18.0
     # via marimo
     # via rich
+pyinstrument==4.6.2
 pykeops==2.2.3
     # via audio-exploration
 pymdown-extensions==10.8.1

@@ -4,6 +4,9 @@ import torch
 from einops import rearrange, reduce, repeat
 from torch import distributed, einsum, nn
 from torch.nn.functional import normalize
+from pyinstrument import Profiler
+
+profiler = Profiler()
 
 
 def noop(*args, **kwargs):
@@ -137,6 +140,7 @@ def kmeans(
     sample_fn=batched_sample_vectors,
     all_reduce_fn=noop,
 ):
+    profiler.start()
     start = time.time()
     num_codebooks, dim, dtype, device = (
         samples.shape[0],
@@ -174,4 +178,6 @@ def kmeans(
 
     end = time.time()
     print(f"It took {end - start} time")
+    profiler.stop()
+    profiler.print()
     return means, bins, buckets

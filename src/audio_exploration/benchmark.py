@@ -3,10 +3,12 @@ from einops import rearrange
 from rich import print as pprint
 from torchmetrics.functional.audio import (
     scale_invariant_signal_noise_ratio as sisnr,
-    signal_noise_ratio as snr
+)
+from torchmetrics.functional.audio import (
+    signal_noise_ratio as snr,
 )
 
-from audio_exploration.kmeans import KMeans, KMeans_cosine, KmeansCodebook, quantize
+from audio_exploration.kmeans import KMeans_cosine, KmeansQuantizer, quantize
 from audio_exploration.kmeans_from_vq import kmeans
 
 
@@ -32,19 +34,19 @@ def run_bench(
         #     [centroids[label] for label in class_labels],
         #     "N D -> N D",
         # )
-        codebook = KmeansCodebook(dim_embed=dim_embed, num_clusters=num_clusters)
-        class_labels = codebook.init_codebook(data_train=data_train)
+        quantizer = KmeansQuantizer(dim_embed=dim_embed, num_clusters=num_clusters)
+        class_labels = quantizer.init_codebook(data_train=data_train)
         # preds = rearrange(
         #     [centroids[label] for label in class_labels],
         #     "N D -> N D",
         # )
-        preds = codebook.codebook(class_labels)
+        preds = quantizer.codebook(class_labels)
         pprint(f"Preds are of shape {preds.shape}")
         sisnr_keops = sisnr(preds, data_train)
         snr_keops = snr(preds, data_train)
         pprint(f"The SI SNR ratio is {sisnr_keops.mean()}")
         pprint(f"The SNR ratio is {snr_keops.mean()}")
-        preds, _, _ = codebook(data_val)
+        preds, _, _ = quantizer(data_val)
         sisnr_keops_val = sisnr(preds, data_val)
         snr_keops_val = snr(preds, data_val)
         pprint(f"The val SI SNR ratio is {sisnr_keops_val.mean()}")

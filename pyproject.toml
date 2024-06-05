@@ -37,6 +37,7 @@ build-backend = "hatchling.build"
 managed = true
 dev-dependencies = [
     "ruff>=0.4.6",
+    "pyinstrument>=4.6.2",
 ]
 
 [tool.hatch.metadata]
