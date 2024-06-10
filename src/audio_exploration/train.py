@@ -1,14 +1,15 @@
 import torch
 from rich import print as pprint
 from torch.utils.data import DataLoader, Dataset
-from torchmetrics.functional.audio import (
-    signal_noise_ratio 
-)
+from torchmetrics.functional.audio import signal_noise_ratio
+
 from audio_exploration.vector_quantizer import VectorQuantizer
 
 
 class RandomData(Dataset):
-    def __init__(self, dim: int, num_samples: int, mean: float = 0.3, var: float = 0.7) -> None:
+    def __init__(
+        self, dim: int, num_samples: int, mean: float = 0.3, var: float = 0.7
+    ) -> None:
         super().__init__()
         self.dim = dim
         self.num_samples = num_samples
@@ -60,9 +61,7 @@ def test_loop(dataloader, model):
 
     test_loss /= num_batches
     snr /= num_batches
-    pprint(
-        f"Test Error: \n SNR: {(snr):>0.1f}, Avg loss: {test_loss:>8f} \n"
-    )
+    pprint(f"Test Error: \n SNR: {(snr):>0.1f}, Avg loss: {test_loss:>8f} \n")
 
 
 if __name__ == "__main__":

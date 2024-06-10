@@ -2,11 +2,11 @@ import time
 
 import torch
 from einops import rearrange
+from pyinstrument import Profiler
 from pykeops.torch import LazyTensor, Vi, Vj
 from rich import print as pprint
 from rich.progress import track
 from torch.nn import Embedding, Module
-from pyinstrument import Profiler
 
 use_cuda = torch.cuda.is_available()
 dtype = torch.float32 if use_cuda else torch.float64
@@ -151,6 +151,7 @@ def KMeans(x, K=10, Niter=10, verbose=True):
 
     return class_labels, centroids
 
+
 def KMeans_improved(x, K=10, Niter=10, verbose=True):
     """Implements Lloyd's algorithm for the Euclidean metric."""
 
@@ -163,9 +164,7 @@ def KMeans_improved(x, K=10, Niter=10, verbose=True):
     x_i = Vi(0, D)  # (N, 1, D) samples
     centroids_j = Vj(1, D)  # (1, K, D) centroids
     distances_ij = ((x_i - centroids_j) ** 2).sum()  # (N, K) symbolic squared distances
-    class_labels_fun = (
-        distances_ij.argmin(dim=1)
-    )
+    class_labels_fun = distances_ij.argmin(dim=1)
 
     # K-means loop:
     # - x  is the (N, D) point cloud,

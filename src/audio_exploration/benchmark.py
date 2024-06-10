@@ -1,13 +1,13 @@
 import torch
 from einops import rearrange
 from rich import print as pprint
+from torch.nn.functional import mse_loss
 from torchmetrics.functional.audio import (
     scale_invariant_signal_noise_ratio as sisnr,
 )
 from torchmetrics.functional.audio import (
     signal_noise_ratio as snr,
 )
-from torch.nn.functional import mse_loss
 
 from audio_exploration.kmeans import KMeans_cosine, KmeansQuantizer, quantize
 from audio_exploration.kmeans_from_vq import kmeans

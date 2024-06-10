@@ -2,9 +2,9 @@ import time
 
 import torch
 from einops import rearrange, reduce, repeat
+from pyinstrument import Profiler
 from torch import distributed, einsum, nn
 from torch.nn.functional import normalize
-from pyinstrument import Profiler
 
 profiler = Profiler()
 

@@ -1,4 +1,3 @@
-
 from jsonargparse import CLI
 
 from audio_exploration.benchmark import run_bench

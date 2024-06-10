@@ -1,7 +1,6 @@
 import torch
 from torch import nn
 from torch.nn import functional
-from rich import print as pprint
 
 
 class VectorQuantizer(nn.Module):
@@ -23,7 +22,7 @@ class VectorQuantizer(nn.Module):
     def resolution(self) -> torch.Tensor:
         """Compute the resolution of the Vector Quantizer.
 
-        The resolution is the log2 of the number of embeddings divided by 
+        The resolution is the log2 of the number of embeddings divided by
         the dimension of the embedding. This is the same as the bitrate by dimension.
 
         Returns
@@ -57,7 +56,7 @@ class VectorQuantizer(nn.Module):
 
         encoding_inds = torch.argmin(dist, dim=1)
         return encoding_inds.view(encodings_shape)
-    
+
     def decode(self, indices: torch.Tensor) -> torch.Tensor:
         """Decode the given indices into vectors, using the codebook.
 
