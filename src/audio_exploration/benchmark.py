@@ -7,6 +7,7 @@ from torchmetrics.functional.audio import (
 from torchmetrics.functional.audio import (
     signal_noise_ratio as snr,
 )
+from torch.nn.functional import mse_loss
 
 from audio_exploration.kmeans import KMeans_cosine, KmeansQuantizer, quantize
 from audio_exploration.kmeans_from_vq import kmeans
@@ -49,8 +50,10 @@ def run_bench(
         preds, _, _ = quantizer(data_val)
         sisnr_keops_val = sisnr(preds, data_val)
         snr_keops_val = snr(preds, data_val)
+        distortion = mse_loss(data_val, preds)
         pprint(f"The val SI SNR ratio is {sisnr_keops_val.mean()}")
         pprint(f"The val SNR ratio is {snr_keops_val.mean()}")
+        pprint(f"The val distortion is {distortion}")
 
         data_train = rearrange(data_train, "N D -> 1 N D")
         class_labels_bis, centroids_bis, buckets = kmeans(
@@ -73,8 +76,10 @@ def run_bench(
         preds, _, _ = quantize(data_val, centroids)
         sisnr_old_val = sisnr(preds, data_val)
         snr_old_val = snr(preds, data_val)
+        distortion = mse_loss(data_val, preds)
         pprint(f"The val SI SNR ratio is {sisnr_old_val.mean()}")
         pprint(f"The val SNR ratio is {snr_old_val.mean()}")
+        pprint(f"The val distortion is {distortion}")
     else:
         class_labels, centroids = KMeans_cosine(data_train, num_clusters)
 
