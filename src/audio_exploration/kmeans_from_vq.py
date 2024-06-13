@@ -181,3 +181,37 @@ def kmeans(
     profiler.stop()
     profiler.print()
     return means, bins, buckets
+
+def kmeans_improved(vectors, num_clusters=10, num_iter=10):
+    """Implements Lloyd's algorithm for the Euclidean metric."""
+
+    profiler.start()
+
+    K = num_clusters
+    _, D = vectors.shape  # Number of samples, dimension of the ambient space
+
+    centroids = vectors[:K, :].clone()  # Simplistic initialization for the centroids
+
+    for _ in range(num_iter):
+        # E step: assign points to the closest cluster -------------------------
+        distances = (
+            torch.sum(vectors**2, dim=1, keepdim=True)
+            + torch.sum(centroids**2, dim=1)
+            - 2 * torch.matmul(vectors, centroids.t())
+        )
+        class_labels = distances.argmin(dim=1).long().view(-1)
+
+        # M step: update the centroids to the normalized cluster average: ------
+        # Compute the sum of points per cluster:
+        centroids.zero_()
+        centroids.scatter_add_(0, class_labels[:, None].repeat(1, D), vectors)
+
+        # Divide by the number of points per cluster:
+        num_points_per_cluster = (
+            torch.bincount(class_labels, minlength=K).type_as(centroids).view(K, 1)
+        )
+        centroids /= num_points_per_cluster  # in-place division to compute the average
+
+    profiler.stop()
+    profiler.print()
+    return class_labels, centroids
