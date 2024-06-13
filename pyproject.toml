@@ -38,6 +38,7 @@ managed = true
 dev-dependencies = [
     "ruff>=0.4.6",
     "pyinstrument>=4.6.2",
+    "ipython>=8.25.0",
 ]
 
 [tool.hatch.metadata]
