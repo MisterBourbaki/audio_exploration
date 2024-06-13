@@ -1,9 +1,9 @@
 import torch
+from jsonargparse import CLI
 from rich import print as pprint
 from torch.utils.data import DataLoader, Dataset
 from torchmetrics.functional.audio import signal_noise_ratio
-
-from audio_exploration.vector_quantizer import VectorQuantizer
+from vector_quantization.vector_quantizer import VectorQuantizer
 
 
 class RandomData(Dataset):
@@ -64,15 +64,14 @@ def test_loop(dataloader, model):
     pprint(f"Test Error: \n SNR: {(snr):>0.1f}, Avg loss: {test_loss:>8f} \n")
 
 
-if __name__ == "__main__":
-    learning_rate = 1e-2
-    batch_size = 1000
-    epochs = 500
-
-    num_embeddings = 32
-    embedding_dim = 2
-    num_samples = 50000
-
+def launch_train(
+    learning_rate: float = 1e-2,
+    batch_size: int = 1000,
+    epochs: int = 500,
+    num_embeddings: int = 32,
+    embedding_dim: int = 2,
+    num_samples: int = 50000,
+):
     model = VectorQuantizer(num_embeddings=num_embeddings, embedding_dim=embedding_dim)
     optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 
@@ -88,3 +87,7 @@ if __name__ == "__main__":
         train_loop(train_dataloader, model, optimizer)
         test_loop(test_dataloader, model)
     pprint("Done!")
+
+
+if __name__ == "__main__":
+    CLI(launch_train)
