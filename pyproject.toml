@@ -22,9 +22,10 @@ dependencies = [
     "librosa>=0.10.2.post1",
     "torchmetrics>=1.4.0.post0",
     "pydantic>=2.7.2",
+    "aenum>=3.1.15",
 ]
 readme = "README.md"
-requires-python = ">= 3.8"
+requires-python = ">= 3.10"
 
 [project.scripts]
 "audio-exploration" = "audio_exploration:main"
