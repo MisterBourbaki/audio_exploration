@@ -2,7 +2,7 @@ from lightning.pytorch import LightningModule
 from torch.nn import Module, MSELoss
 from torch.optim import AdamW
 
-from src.vector_quantization.vector_quantizer import VectorQuantizer
+from vector_quantization.vector_quantizer import VectorQuantizer
 
 
 class LitVQ(LightningModule):

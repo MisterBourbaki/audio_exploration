@@ -46,4 +46,4 @@ dev-dependencies = [
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/audio_exploration"]
+packages = ["src/audio_exploration", "src/vector_quantization"]
