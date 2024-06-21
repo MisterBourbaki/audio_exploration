@@ -2,6 +2,8 @@ import torch
 from torch import nn
 from torch.nn import functional
 
+from vector_quantization.utils import compute_pairwise_distances
+
 
 class VectorQuantizer(nn.Module):
     """
@@ -48,10 +50,8 @@ class VectorQuantizer(nn.Module):
         encodings_shape = latents.shape[:-1]
         flat_latents = latents.view(-1, self.D)
 
-        dist = (
-            torch.sum(flat_latents**2, dim=1, keepdim=True)
-            + torch.sum(self.codebook.weight**2, dim=1)
-            - 2 * torch.matmul(flat_latents, self.codebook.weight.t())
+        dist = compute_pairwise_distances(
+            input=flat_latents, target=self.codebook.weight, return_score=False
         )
 
         encoding_inds = torch.argmin(dist, dim=1)
