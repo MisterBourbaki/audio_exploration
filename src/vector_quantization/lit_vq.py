@@ -10,14 +10,16 @@ class LitVQ(LightningModule):
         self,
         encoder_module: Module,
         decoder_module: Module,
-        num_embeddings,
-        embedding_dim,
-        beta,
-        lr,
+        normalization: Module,
+        num_embeddings: int,
+        embedding_dim: int,
+        beta: float = 0.25,
+        lr: float = 5e-4,
     ) -> None:
         super().__init__()
         self.encoder = encoder_module
         self.decoder = decoder_module
+        self.normalization = normalization
 
         self.num_embeddings = num_embeddings
         self.embedding_dim = embedding_dim
@@ -33,7 +35,8 @@ class LitVQ(LightningModule):
         )
 
     def training_step(self, batch):
-        features = self.encoder(batch)
+        batch_norm = self.normalization(batch)
+        features = self.encoder(batch_norm)
         quantized, vq_loss = self.quantizer(features)
         preds = self.decoder(quantized)
         recon_loss = self.reconstruction_loss(features, preds)
@@ -46,7 +49,8 @@ class LitVQ(LightningModule):
         return total_loss
 
     def validation_step(self, batch):
-        features = self.encoder(batch)
+        batch_norm = self.normalization(batch)
+        features = self.encoder(batch_norm)
         quantized, vq_loss = self.quantizer(features)
         preds = self.decoder(quantized)
         recon_loss = self.reconstruction_loss(features, preds)
