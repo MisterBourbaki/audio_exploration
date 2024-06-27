@@ -12,12 +12,14 @@ from torchmetrics.functional.audio import (
 from audio_exploration.kmeans import KMeans_cosine, KmeansQuantizer, quantize
 from audio_exploration.kmeans_from_vq import kmeans, kmeans_improved
 
+
 def validation(model, data_val):
     preds, _, _ = model(data_val)
     sisnr_values = sisnr(preds, data_val)
     snr_values = snr(preds, data_val)
     distortion = mse_loss(data_val, preds)
     return {"sisnr": sisnr_values, "snr": snr_values, "distortion": distortion}
+
 
 def run_bench(
     num_samples: int = 10000,
@@ -38,7 +40,7 @@ def run_bench(
     if not use_cosine:
         quantizer = KmeansQuantizer(dim_embed=dim_embed, num_clusters=num_clusters)
         class_labels = quantizer.init_codebook(data_train=data_train)
-        
+
         metrics = validation(quantizer, data_val)
         pprint(f"The val SI SNR ratio is {metrics['sisnr'].mean()}")
         pprint(f"The val SNR ratio is {metrics['snr'].mean()}")
@@ -49,7 +51,7 @@ def run_bench(
             data_train, num_clusters=num_clusters
         )
         centroids = rearrange(class_labels_bis, " 1 N D -> N D")
-        
+
         preds, _, _ = quantize(data_val, centroids)
         sisnr_old_val = sisnr(preds, data_val)
         snr_old_val = snr(preds, data_val)
@@ -62,7 +64,7 @@ def run_bench(
         class_labels_improved, centroids_improved = kmeans_improved(
             data_train, num_clusters=num_clusters
         )
-        
+
         preds = rearrange(
             [centroids_improved[label] for label in class_labels_improved],
             "N D -> N D",

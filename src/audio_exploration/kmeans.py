@@ -33,6 +33,7 @@ def quantize(input, centroids):
 
     return preds, class_labels, distances_ij
 
+
 class KmeansQuantizer(Module):
     def __init__(self, dim_embed, num_clusters) -> None:
         super().__init__()

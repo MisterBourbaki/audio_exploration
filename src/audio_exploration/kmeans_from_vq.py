@@ -182,6 +182,7 @@ def kmeans(
     profiler.print()
     return means, bins, buckets
 
+
 def kmeans_improved(vectors, num_clusters=10, num_iter=10):
     """Implements Lloyd's algorithm for the Euclidean metric."""
 
